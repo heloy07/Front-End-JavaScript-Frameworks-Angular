@@ -1,3 +1,4 @@
+import { ProcessHTTPMsgService } from './services/process-httpmsg.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,7 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { AppComponent } from './app.component';
 
@@ -39,6 +40,7 @@ import { DishService } from './services/dish.service';
 import { PromotionService } from './services/promotion.service';
 import { LeaderService } from './services/leader.service';
 import { LoginComponent } from './login/login.component';
+
 
 @NgModule({
   declarations: [
@@ -76,7 +78,12 @@ import { LoginComponent } from './login/login.component';
     MatSliderModule
 
   ],
-  providers: [DishService, PromotionService, LeaderService,{provide: 'BaseURL', useValue: baseURL}],
+  providers: [
+    DishService,
+    PromotionService,
+    LeaderService,
+    ProcessHTTPMsgService,
+    { provide: 'BaseURL', useValue: baseURL }],
   bootstrap: [AppComponent],
   entryComponents: [LoginComponent],
 })
