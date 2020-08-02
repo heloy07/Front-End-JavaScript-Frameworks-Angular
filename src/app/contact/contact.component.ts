@@ -1,16 +1,28 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { FeedbackService } from './../services/feedback.service';
+import { Component, OnInit,ViewChild, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Feedback, ContactType } from '../shared/feedback';
+import { flyInOut, expand } from '../animations/app.animation';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.scss'],
+   // tslint:disable-next-line:use-host-property-decorator
+   host: {
+    '[@flyInOut]': 'true',  
+    'style': 'display: block;'
+    },
+    animations: [
+      flyInOut(),
+      expand()
+    ]
 })
 export class ContactComponent implements OnInit {
   @ViewChild('fform') feedbackFormDirective;
-
+  loading: boolean;
+  showForm: boolean;
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType = ContactType;
@@ -41,10 +53,15 @@ export class ContactComponent implements OnInit {
       'email':         'Email not in valid format.'
     },
   };
+  errMess: any;
+  
+  
   
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private feedbackService:FeedbackService,@Inject('BaseURL') public BaseURL) {
     this.createForm();
+    this.loading=false;
+    this.showForm=false;
   }
 
   ngOnInit() {
@@ -86,8 +103,26 @@ export class ContactComponent implements OnInit {
   
 
   onSubmit() {
+    this.loading=true;
     this.feedback = this.feedbackForm.value;
-    console.log(this.feedback);
+    this.feedbackService.submitFeedback(this.feedback)
+      .subscribe(feedback => {
+          this.feedback = feedback;
+          console.log(this.feedback);
+        },
+        errmess => {
+          this.feedback = null;
+          this.errMess = <any>errmess;
+        },
+        () => {
+          this.showForm = true;
+          setTimeout(() => {
+              this.showForm = false;
+              this.loading = false;
+            } , 5000
+          );  
+        }); 
+
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
