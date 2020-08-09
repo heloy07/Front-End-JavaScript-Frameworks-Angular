@@ -58,7 +58,7 @@ export class ContactComponent implements OnInit {
   
   
 
-  constructor(private fb: FormBuilder, private feedbackService:FeedbackService,@Inject('BaseURL') public BaseURL) {
+  constructor(private fb: FormBuilder, private feedbackService:FeedbackService,@Inject('baseURL') public baseURL) {
     this.createForm();
     this.loading=false;
     this.showForm=false;
